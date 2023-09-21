@@ -16,6 +16,16 @@ exports.checkID = (request, response, next, value) => {
   next();
 };
 
+exports.checkBody = (request, response, next) => {
+  if (!request.body.name || !request.body.price) {
+    return response.status(400).json({
+      status: "fail",
+      message: "Missing price or name",
+    });
+  }
+  next();
+};
+
 exports.getAllTours = (request, response) => {
   response.status(200).json({
     status: "success",
