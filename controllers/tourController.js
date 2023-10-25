@@ -50,7 +50,7 @@ exports.createTour = async (request, response) => {
   } catch (err) {
     response.status(400).json({
       status: "fail",
-      message: "Invalid data sent!",
+      message: err,
     });
   }
 };
