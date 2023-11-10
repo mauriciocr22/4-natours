@@ -83,9 +83,9 @@ exports.updateTour = async (request, response) => {
       },
     });
   } catch (err) {
-    response.status(400).json({
+    response.status(404).json({
       status: "fail",
-      message: "Invalid data sent!",
+      message: err,
     });
   }
 };
