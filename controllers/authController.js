@@ -49,3 +49,17 @@ exports.login = catchAsync(async (request, response, next) => {
     token
   })
 });
+
+exports.protect = catchAsync(async (request, response, next) => {
+  let token;
+
+  if(request.headers.authorization && request.headers.authorization.startsWith("Bearer")) {
+    token = request.headers.authorization.split(" ")[1]
+  }
+  console.log(token)
+
+  if(!token) {
+    return next(new AppError("You are not logged in! Please login to get access", 401)) //Unauthorized
+  }
+  next()
+})
