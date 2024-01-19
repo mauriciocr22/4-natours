@@ -12,6 +12,18 @@ const signToken = id => {
   });
 }
 
+const createSendToken = (user, statusCode, response) => {
+  const token = signToken(user._id)
+
+  response.status(statusCode).json({
+    status: "success",
+    token,
+    data: {
+      user,
+    },
+  });
+}
+
 exports.signup = catchAsync(async (request, response, next) => {
   const newUser = await User.create({
     name: request.body.name,
@@ -22,15 +34,7 @@ exports.signup = catchAsync(async (request, response, next) => {
     role: request.body.role
   });
 
-  const token = signToken(newUser._id)
-
-  response.status(201).json({
-    status: "success",
-    token,
-    data: {
-      user: newUser,
-    },
-  });
+  createSendToken(newUser, 201, response);
 });
 
 exports.login = catchAsync(async (request, response, next) => {
@@ -46,12 +50,7 @@ exports.login = catchAsync(async (request, response, next) => {
     return next(new AppError("Incorrect email or password.", 401))
   }
 
-
-  const token = signToken(user._id);
-  response.status(200).json({
-    status:  "success",
-    token
-  })
+  createSendToken(user, 200, response);
 });
 
 exports.protect = catchAsync(async (request, response, next) => {
@@ -137,10 +136,19 @@ exports.resetPassword = catchAsync(async (request, response, next) => {
 
   await user.save();
 
-  const token = signToken(user._id);
+  createSendToken(user, 200, response);
+})
 
-  response.status(200).json({
-    status: "success",
-    token
-  })
+exports.updatePassword = catchAsync(async (request, response, next) => {
+  const user = await User.findById(request.user.id).select("+password")
+
+  if(!(user.correctPassword(request.body.passwordCurrent, user.password))) {
+    return next(new AppError("Your current password is incorrect.", 401))
+  }
+
+  user.password = request.body.password;
+  user.passwordConfirm = request.body.passwordConfirm;
+  await user.save();
+
+  createSendToken(user, 200, response);
 })
