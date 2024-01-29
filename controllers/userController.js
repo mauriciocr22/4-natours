@@ -12,6 +12,10 @@ const filterObj = (obj, ...alowedFields) => {
 return newObj;
 }
 
+exports.getMe = (request, response, next) => {
+  request.params.id = request.user.id;
+  next();
+}
 
 exports.updateMe = catchAsync(async (request, response, next) => {
   if(request.body.password || request.body.passwordConfirm) {
