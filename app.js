@@ -59,7 +59,19 @@ app.get("/", (request, response) => {
     tour: "The Forest Hiker",
     user: "Jonas"
   })
-})
+});
+
+app.use("/overview", (request, response) => {
+  response.status(200).render("overview", {
+    title: "All tours"
+  });
+});
+
+app.use("/tour", (request, response) => {
+  response.status(200).render("tour", {
+    title: "The Forest Hiker Tour"
+  });
+});
 
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
