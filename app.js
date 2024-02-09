@@ -22,6 +22,16 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(helmet())
 
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      'script-src': ["'self'", 'https://unpkg.com'],
+      'img-src': ["'self'", 'data:', 'https://*.tile.openstreetmap.org'],
+    },
+  })
+);
+
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
