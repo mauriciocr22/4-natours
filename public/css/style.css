@@ -1336,5 +1336,11 @@ body {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   }
+
+  .mapPopup {
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-size: 1.4rem;
+  }
   
   
