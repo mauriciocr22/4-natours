@@ -8,7 +8,7 @@ exports.getOverview = catchAsync(async (request, response, next) => {
     title: "All tours",
     tours
   });
-})
+});
 
 exports.getTour = catchAsync(async (request, response) => {
   const tour = await Tour.findOne({ slug: request.params.slug }).populate({
@@ -20,4 +20,11 @@ exports.getTour = catchAsync(async (request, response) => {
     title: `${tour.name} Tour`,
     tour
   });
-})
+});
+
+exports.getLogin = (request, response) => {
+  response.status(200).render("login", {
+    title: "Login into your account",
+
+  });
+}
