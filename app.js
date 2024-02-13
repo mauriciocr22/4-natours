@@ -5,7 +5,8 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
-const hpp = require("hpp")
+const hpp = require("hpp");
+const cookieParser = require("cookie-parser");
 
 const AppError = require("./utils/appError");
 const errorHandler = require("./controllers/errorController");
@@ -20,7 +21,7 @@ app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(helmet())
+app.use(helmet());
 
 app.use(
   helmet.contentSecurityPolicy({
@@ -47,6 +48,7 @@ app.use("/api", limiter);
 app.use(express.json({
   limit: "10kb"
 }));
+app.use(cookieParser());
 
 app.use(mongoSanitize());
 app.use(xss())
@@ -62,6 +64,7 @@ app.use(hpp({
 }));
 app.use((request, response, next) => {
   request.requestTime = new Date().toISOString();
+  console.log(request.cookies);
   next();
 });
 
