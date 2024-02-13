@@ -23,8 +23,11 @@ exports.getTour = catchAsync(async (request, response) => {
 });
 
 exports.getLogin = (request, response) => {
-  response.status(200).render("login", {
-    title: "Login into your account",
-
+  response.status(200).set(
+    'Content-Security-Policy',
+    "connect-src 'self' https://cdnjs.cloudflare.com"
+  )
+  .render('login', {
+      title: 'Log into your account',
   });
 }
