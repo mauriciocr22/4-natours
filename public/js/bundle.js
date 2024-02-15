@@ -2176,6 +2176,18 @@
       showAlert("error", error.response.data.message);
     }
   };
+  var logout = async () => {
+    try {
+      const result = await axios_default({
+        method: "GET",
+        url: "http://localhost:3000/api/v1/users/logout"
+      });
+      if (result.data.status === "success")
+        location.reload(true);
+    } catch (err) {
+      showAlert("error", "Error logging out! Try again.");
+    }
+  };
 
   // public/js/leaflet.js
   var displayMap = (locations) => {
@@ -2208,6 +2220,7 @@
   // public/js/index.js
   var leaflet = document.getElementById("map");
   var loginForm = document.querySelector(".form");
+  var logoutButton = document.querySelector(".nav__el--logout");
   if (leaflet) {
     const locations = JSON.parse(leaflet.dataset.locations);
     displayMap(locations);
@@ -2219,5 +2232,8 @@
       const password = document.getElementById("password").value;
       login(email, password);
     });
+  }
+  if (logoutButton) {
+    logoutButton.addEventListener("click", logout);
   }
 })();

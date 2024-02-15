@@ -63,6 +63,15 @@ exports.login = catchAsync(async (request, response, next) => {
   createSendToken(user, 200, response);
 });
 
+exports.logout = (request, response) => {
+  response.cookie("jwt", "loggedout", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true
+  });
+
+  response.status(200).json({ status: "success" });
+}
+
 exports.protect = catchAsync(async (request, response, next) => {
   let token;
 
@@ -90,23 +99,25 @@ exports.protect = catchAsync(async (request, response, next) => {
   next()
 });
 
-exports.isLoggedIn = catchAsync(async (request, response, next) => {
+exports.isLoggedIn = async (request, response, next) => {
   if(request.cookies.jwt) {
-    const decoded = await promisify(jwt.verify)(request.cookies.jwt, process.env.JWT_SECRET);
-  
-    const freshUser = await User.findById(decoded.id);
-    if(!freshUser) {
+    try {
+      const decoded = await promisify(jwt.verify)(request.cookies.jwt, process.env.JWT_SECRET);
+      const freshUser = await User.findById(decoded.id);
+      if(!freshUser) {
+        return next();
+      }
+      if(freshUser.changePasswordAfter(decoded.iat)) {
+        return next();
+      }
+      response.locals.user = freshUser;
+      return next()
+    } catch(err) {
       return next();
     }
-    if(freshUser.changePasswordAfter(decoded.iat)) {
-      return next();
-    }
-
-    response.locals.user = freshUser;
-    return next()
   }
   next();
-})
+}
 
 
 exports.restrictTo = (...roles) => {
