@@ -88,7 +88,26 @@ exports.protect = catchAsync(async (request, response, next) => {
 
   request.user = freshUser;
   next()
+});
+
+exports.isLoggedIn = catchAsync(async (request, response, next) => {
+  if(request.cookies.jwt) {
+    const decoded = await promisify(jwt.verify)(request.cookies.jwt, process.env.JWT_SECRET);
+  
+    const freshUser = await User.findById(decoded.id);
+    if(!freshUser) {
+      return next();
+    }
+    if(freshUser.changePasswordAfter(decoded.iat)) {
+      return next();
+    }
+
+    response.locals.user = freshUser;
+    return next()
+  }
+  next();
 })
+
 
 exports.restrictTo = (...roles) => {
   return (request, response, next) => {
