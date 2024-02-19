@@ -2219,7 +2219,7 @@
 
   // public/js/index.js
   var leaflet = document.getElementById("map");
-  var loginForm = document.querySelector(".form");
+  var loginForm = document.querySelector(".form--login");
   var logoutButton = document.querySelector(".nav__el--logout");
   if (leaflet) {
     const locations = JSON.parse(leaflet.dataset.locations);

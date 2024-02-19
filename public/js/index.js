@@ -2,7 +2,7 @@ import { login, logout } from "./login"
 import { displayMap } from "./leaflet";
 
 const leaflet = document.getElementById('map');
-const loginForm = document.querySelector(".form");
+const loginForm = document.querySelector(".form--login");
 const logoutButton = document.querySelector(".nav__el--logout");
 
 if(leaflet) {
