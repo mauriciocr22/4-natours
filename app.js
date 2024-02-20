@@ -63,7 +63,6 @@ app.use(hpp({
 }));
 app.use((request, response, next) => {
   request.requestTime = new Date().toISOString();
-  console.log(request.cookies);
   next();
 });
 
