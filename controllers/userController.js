@@ -44,14 +44,13 @@ exports.getMe = (request, response, next) => {
 }
 
 exports.updateMe = catchAsync(async (request, response, next) => {
-  console.log(request.file);
-  console.log(request.body);
-
   if(request.body.password || request.body.passwordConfirm) {
     return next(new AppError("This route is not for password updates. Please use the /updateMyPassword route.", 400))
   }
   
   const filteredBody = filterObj(request.body, "name", "email");
+  if(request.file) filteredBody.photo = request.file.filename
+
   const updatedUser = await User.findByIdAndUpdate(request.user.id, filteredBody, {
     new: true,
     runValidators: true
