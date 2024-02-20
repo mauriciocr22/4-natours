@@ -2217,10 +2217,30 @@
     map.fitBounds(bounds);
   };
 
+  // public/js/updateSettings.js
+  var updateData = async (name, email) => {
+    try {
+      const response = await axios_default({
+        method: "PATCH",
+        url: "http://localhost:3000/api/v1/users/updateMe",
+        data: {
+          name,
+          email
+        }
+      });
+      if (response.data.status === "success") {
+        showAlert("success", "Data updated successfully!");
+      }
+    } catch (err) {
+      showAlert("error", err.response.data.message);
+    }
+  };
+
   // public/js/index.js
   var leaflet = document.getElementById("map");
   var loginForm = document.querySelector(".form--login");
   var logoutButton = document.querySelector(".nav__el--logout");
+  var userDataForm = document.querySelector(".form-user-data");
   if (leaflet) {
     const locations = JSON.parse(leaflet.dataset.locations);
     displayMap(locations);
@@ -2235,5 +2255,13 @@
   }
   if (logoutButton) {
     logoutButton.addEventListener("click", logout);
+  }
+  if (userDataForm) {
+    userDataForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      updateData(name, email);
+    });
   }
 })();
