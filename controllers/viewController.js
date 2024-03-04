@@ -1,5 +1,6 @@
 const Tour = require("../models/tourModel");
 const User = require("../models/userModel");
+const Booking = require("../models/bookingModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
@@ -18,7 +19,7 @@ exports.getTour = catchAsync(async (request, response, next) => {
     fields: "review rating user"
   });
 
-  if(!tour) {
+  if (!tour) {
     return next(new AppError("There is no tour with that name", 404))
   }
 
@@ -33,9 +34,9 @@ exports.getLogin = (request, response) => {
     'Content-Security-Policy',
     "connect-src 'self' https://cdnjs.cloudflare.com"
   )
-  .render('login', {
+    .render('login', {
       title: 'Log into your account',
-  });
+    });
 }
 
 exports.getAccount = (request, response) => {
@@ -44,18 +45,30 @@ exports.getAccount = (request, response) => {
   });
 }
 
+exports.getMyTours = catchAsync(async (request, response, next) => {
+  const bookings = await Booking.find({ user: request.user.id });
+
+  const tourIDs = bookings.map(el => el.tour);
+  const tours = await Tour.find({ _id: { $in: tourIDs } });
+
+  response.status(200).render("overview", {
+    title: "My Tours",
+    tours
+  })
+});
+
 exports.updateUserData = catchAsync(async (request, response, next) => {
   const updatedUser = await User.findByIdAndUpdate(request.user.id, {
     name: request.body.name,
     email: request.body.email
   },
-  {
-    new: true,
-    runValidators: true
-  });
+    {
+      new: true,
+      runValidators: true
+    });
 
   response.status(200).render("account", {
     title: "Your account",
     user: updatedUser
   });
-})
+});
