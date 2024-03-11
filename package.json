@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "set NODE_ENV=production&&nodemon server.js",
+    "start:dev": "set NODE_ENV=production&&nodemon server.js",
+    "start": "node server.js",
     "debug": "ndb server.js",
     "watch": "esbuild ./public/js/index.js --bundle --outfile=./public/js/bundle.js --watch",
     "build": "esbuild ./public/js/index.js --bundle --outfile=./public/js/bundle.js"
@@ -39,5 +40,8 @@
     "stripe": "^7.0.0",
     "validator": "^13.11.0",
     "xss-clean": "^0.1.4"
+  },
+  "engines": {
+    "node": ">=10.0.0"
   }
 }
