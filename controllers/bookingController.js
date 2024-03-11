@@ -24,7 +24,7 @@ exports.getCheckoutSession = catchAsync(async (request, response, next) => {
             name: tour.name,
             description: `${tour.summary}`,
             images: [
-              `${req.protocol}://${req.get('host')}/img/tours/${tour.imageCover
+              `${request.protocol}://${request.get('host')}/img/tours/${tour.imageCover
               }`
             ]
           }
@@ -41,7 +41,7 @@ exports.getCheckoutSession = catchAsync(async (request, response, next) => {
   });
 });
 
-// exports.createBookingCheckout = catchAsync(async (request, response, next) => {
+// exports.createBookingCheckout = catchAsync(async (requestuest, response, next) => {
 //   const { tour, user, price } = request.query;
 
 //   if (!tour && !user && !price) return next();
