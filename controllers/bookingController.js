@@ -16,7 +16,6 @@ exports.getCheckoutSession = catchAsync(async (request, response, next) => {
     client_reference_id: request.params.tourId,
     line_items: [
       {
-        description: `${tour.summary}`,
         price_data: {
           unit_amount: tour.price * 100,
           currency: 'usd',
