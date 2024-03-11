@@ -8,9 +8,6 @@ const factory = require("./handlerFactory");
 exports.getCheckoutSession = catchAsync(async (request, response, next) => {
   const tour = await Tour.findById(request.params.tourId);
 
-  if (!tour) return next(new AppError('Tour not found!', 404));
-
-  // create a checkout session
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     payment_method_types: ['card'],
